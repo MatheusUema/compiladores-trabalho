@@ -40,3 +40,6 @@ cadeias), etc. Nesse ponto, sugere-se que se use a experiência adquirida em sal
 empregue seu bom senso e faça o exercício de se colocar no lugar do possível usuário de seu
 sistema, respondendo a perguntas como “esse sistema está simples e fácil de usar?” e “a saída
 dele é legível?”.
+
+Link para os autômatos: https://drive.google.com/file/d/10lBQEgeI2BleOYRBq4bGYprY2bqpTk_d/view
+Link para o relatório: https://docs.google.com/document/d/1eAyG8B7kCGZiorw5JGOSJJGKSqxXOaJN05_CDR8HQbk/edit
