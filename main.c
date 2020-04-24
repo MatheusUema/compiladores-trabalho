@@ -63,3 +63,131 @@ int confere_branco (char caract) {
     } 
     return 0;
 }
+
+
+int seleciona_automato(char caract, int controle){ 
+
+    if (confere_numero (caract)){
+        controle = 1;
+        return 0;
+    }
+
+    if(confere_letra(caract)){
+        controle = 2;
+        return 0;
+    }
+
+    if (caract == 123){
+        controle = 3;
+        return 0;
+    }
+
+    if (confere_reservado(caract)){
+        controle = 4;
+        return 0;
+    }
+        
+    if(confere_branco(caract) == 0){
+        controle = 5;
+        return 0;
+    }
+       
+}
+
+int checa_invalido_geral (char caract, int controle, int automato){
+
+    if (automato == 1){
+        checa_invalido_num(caract,controle);
+        return 0;
+    }
+
+    if (automato == 2){
+        checa_invalido_palavra(caract,controle);
+        return 0;
+    }
+
+    if (automato == 3){
+        checa_invalido_comentario(caract,controle);
+        return 0;
+    }
+
+     if (automato == 4){
+        checa_invalido_reservado(caract,controle);
+        return 0;
+    }
+
+    if (automato == 5){
+        controle = 1;
+        return 0;
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+int le_arq(char *arqler){
+
+    char cadeia[29];
+    char buffer;
+    int automato = 0;
+    int caracter_invalido = 0;
+    int controle_cadeia = 0;
+
+    for(int a=0; a<29; a++){ // zero a cadeia
+        cadeia[a] = NULL;
+    }
+
+    FILE *arquivo_em_leitura;
+ 
+    arquivo_em_leitura = fopen(arqler, "r");
+
+    if(arquivo_em_leitura == NULL){
+        printf("Arquivo Vazio.\n");
+    }
+
+    fseek(arquivo_em_leitura,1,SEEK_CUR);
+
+    fread(&buffer,1,1,arquivo_em_leitura);
+
+    seleciona_automato(buffer,automato); // varialvel automato sai dessa func com o automato q eu to no momento
+
+
+    checa_invalido_geral(buffer,caracter_invalido, automato);
+
+    while( controle_cadeia <= 28 && caracter_invalido == 0){ // assumindo q 1 caracter eh valido
+
+        cadeia[controle_cadeia] = buffer;
+
+        fread(&buffer,1,1,arquivo_em_leitura);
+        controle_cadeia ++;
+        checa_invalido_geral(buffer,caracter_invalido, automato);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
