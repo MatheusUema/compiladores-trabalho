@@ -58,7 +58,7 @@ int confere_letra (char caract) {
 }
 
 int confere_branco (char caract) {
-     if ((caract == 32 || caract == 10){
+     if (caract == 32 || caract == 10){
         return 1;
     } 
     return 0;
