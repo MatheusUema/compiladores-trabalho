@@ -63,7 +63,56 @@ int confere_branco (char caract) {
     } 
     return 0;
 }
+void checa_invalido_num(char caract, int controle, int racional,int quebra_linha){
+    if(confere_numero(caract) || caract == 46){ // se numero ou ponto
+        if(caract == 46){
+            racional = 1;
+        }
+        controle = 0;
+    }else{
+        if(confere_branco(caract)){
+            quebra_linha = 1;
+        }else{
+            controle = 1;
+        }
+        
+    }
 
+}
+
+void checa_invalido_palavra(char caract, int controle, int quebra_linha){
+
+    // se for letra ou underline eh aceito, se nao ele checa se eh quebra d linha ou espaco, se nao quer dizer q eh caract invalido
+    if(confere_letra(caract) || caract == 176 || caract == 177 || caract == 178 || caract ==242 || caract == 254){
+        controle = 0;
+    }else{
+        if(confere_branco(caract)){
+            quebra_linha = 1;
+        }else{
+            controle = 1;
+        }
+    }
+
+
+}
+
+void checa_invalido_comentario(char caract, int controle,int quebra_linha, char *arquivo){
+    FILE *teste_fim_arq;
+    teste_fim_arq = fopen(arquivo, "r");
+
+    if(!feof(teste_fim_arq)){
+        controle = 0;
+    }else{if(confere_branco(caract)){
+            quebra_linha = 1;
+        }else{
+            controle = 1;
+        }
+        
+    }
+
+}
+
+void checa_invalido_reservado(char caract, int controle);
 
 int seleciona_automato(char caract, int controle){ 
 
@@ -94,20 +143,24 @@ int seleciona_automato(char caract, int controle){
        
 }
 
-int checa_invalido_geral (char caract, int controle, int automato){
+int checa_invalido_geral (char caract, int controle, int automato, int racional, int quebra_linha, char *arquivo){
 
     if (automato == 1){
-        checa_invalido_num(caract,controle);
+        checa_invalido_num(caract,controle, racional,quebra_linha);
+        //analise de racional aqui
+        //analise de quebra de linha
         return 0;
     }
 
     if (automato == 2){
-        checa_invalido_palavra(caract,controle);
+        checa_invalido_palavra(caract,controle,quebra_linha);
+        //analise de quebra de linha
         return 0;
     }
 
     if (automato == 3){
-        checa_invalido_comentario(caract,controle);
+        checa_invalido_comentario(caract,controle,quebra_linha, arquivo);
+        //analise quebra linha
         return 0;
     }
 
@@ -139,6 +192,8 @@ int le_arq(char *arqler){
     int automato = 0;
     int caracter_invalido = 0;
     int controle_cadeia = 0;
+    int controle_racional = 0;
+    int controle_quebra_linha = 0;
 
     for(int a=0; a<29; a++){ // zero a cadeia
         cadeia[a] = NULL;
@@ -159,15 +214,18 @@ int le_arq(char *arqler){
     seleciona_automato(buffer,automato); // varialvel automato sai dessa func com o automato q eu to no momento
 
 
-    checa_invalido_geral(buffer,caracter_invalido, automato);
+    checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha , arqler);
 
     while( controle_cadeia <= 28 && caracter_invalido == 0){ // assumindo q 1 caracter eh valido
 
         cadeia[controle_cadeia] = buffer;
-
         fread(&buffer,1,1,arquivo_em_leitura);
         controle_cadeia ++;
-        checa_invalido_geral(buffer,caracter_invalido, automato);
+
+        checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha, arqler);
+        if (caracter_invalido == 1){
+            chamada_de_erro();
+        }
 
     }
 
