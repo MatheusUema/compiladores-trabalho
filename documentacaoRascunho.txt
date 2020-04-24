@@ -14,3 +14,6 @@ Função Analisador Léxico:
     Recebe arquivo txt, realiza sua análise léxica e retorna um arquivo de saída txt com os pares de tokens reconhecidos.
 
     O analisador ĺéxico, então, vai criar um arquivo chamado saida.txt para escrita e abrirá o arquivo de entrada para leitura.
+
+    Em seguida, realiza-se a análise léxica.
+        A análise léxica será realizada lendo o arquivo caracter a caracter e seguindo os autômatos.
