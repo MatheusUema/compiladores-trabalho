@@ -1,0 +1,16 @@
+Esboço Documentação
+
+-- para compilar arquivo: gcc main.c -o main
+-- para executar: ./main nome_do_programa.txt
+
+
+Função Main:
+    Atua como o compilador da máquina.
+
+    Como entrada ela recebe o nome de um arquivo txt.
+
+
+Função Analisador Léxico:
+    Recebe arquivo txt, realiza sua análise léxica e retorna um arquivo de saída txt com os pares de tokens reconhecidos.
+
+    O analisador ĺéxico, então, vai criar um arquivo chamado saida.txt para escrita e abrirá o arquivo de entrada para leitura.
