@@ -180,7 +180,54 @@ int checa_invalido_geral (char caract, int controle, int automato, int racional,
 }
 
 
+int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
+    if(automato == 1){
+        if(racional == 1){
+            int x=0;
+            while(cadeia[x] != NULL || x<29){
+                printf("&c", cadeia[x]);
+                x++;
+            }
+
+            printf(", numero racional/n");
+            return 0;
+        }
+
+        int x=0;
+            while(cadeia[x] != NULL || x<29){
+                printf("&c", cadeia[x]);
+                x++;
+            }
+
+            printf(", numero inteiro/n");
+            return 0;
+
+    }
+
+
+    if(automato == 2){
+
+        // precisa identificar se eh comando ou variael
+
+         int x=0;
+            while(cadeia[x] != NULL || x<29){
+                printf("&c", cadeia[x]);
+                x++;
+            }
+
+            printf(", comando/n");
+            return 0;
+
+
+    }
+
+
+
+
+
+
+}
 
 
 
@@ -216,13 +263,27 @@ int le_arq(char *arqler){
 
     checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha , arqler);
 
-    while( controle_cadeia <= 28 && caracter_invalido == 0){ // assumindo q 1 caracter eh valido
+    while( !feof(arquivo_em_leitura) ){ // assumindo q 1 caracter eh valido
 
         cadeia[controle_cadeia] = buffer;
         fread(&buffer,1,1,arquivo_em_leitura);
         controle_cadeia ++;
 
         checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha, arqler);
+        
+        if(controle_quebra_linha==1){
+
+            devolvo_cadeia();
+
+            for(int a=0; a<29; a++){ // zero a cadeia
+                cadeia[a] = NULL;
+            }
+
+            controle_cadeia = 0;
+            controle_quebra_linha = 0;
+
+        }
+
         if (caracter_invalido == 1){
             chamada_de_erro();
         }

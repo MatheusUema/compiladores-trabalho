@@ -20,4 +20,8 @@ void checa_invalido_reservado(char caract, int controle);
 int checa_invalido_geral(char caract, int controle, int automato, int racional, int quebra_linha, char *arquivo);
 
 int seleciona_automato(char caract, int controle); 
+
+int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional);
+
+
 #endif
