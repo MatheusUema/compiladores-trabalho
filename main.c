@@ -186,12 +186,12 @@ int checa_invalido_geral (char caract, int controle, int automato, int racional,
 
 int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
-    if(automato == 1){
-        if(racional == 1){
+    if(automato == 1){// se no automato 1 entao eh numero
+        if(racional == 1){// se o controle de racional for 1 entao eh nmero racional
             int x=0;
-            while(cadeia[x] != NULL || x<29){
-                printf("&c", cadeia[x]);
-                x++;
+            while(cadeia[x] != NULL || x<29){ //percorro a cadeia ateh o final ou ateh achar um NULL
+                printf("&c", cadeia[x]); //imprimo o caracter 
+                x++;//repito o processo
             }
 
             printf(", numero racional/n");
@@ -210,9 +210,9 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
     }
 
 
-    if(automato == 2){
+    if(automato == 2){ // se automato 2 entao to em palavra
 
-        // precisa identificar se eh comando ou variael
+        // falta aqui identificar se eh comando ou variael
 
          int x=0;
             while(cadeia[x] != NULL || x<29){
@@ -226,7 +226,7 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
     }
 
-    if(automato == 3){
+    if(automato == 3){ // se automato 3 entao to em comentario
 
          int x=0;
             while(cadeia[x] != NULL || x<29){
@@ -241,7 +241,7 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
     }
 
-    if(automato == 4){
+    if(automato == 4){ //se automato 4 entao to em simbolos reservados
 
          int x=0;
             while(cadeia[x] != NULL || x<29){
@@ -258,7 +258,7 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
 
 
-    if(automato == 5){
+    if(automato == 5){// se automato 5 entao to em caracter invalido
 
             int x=0;
                 while(cadeia[x] != NULL || x<29){
