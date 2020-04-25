@@ -63,16 +63,18 @@ int confere_branco (char caract) {
     } 
     return 0;
 }
+
 void checa_invalido_num(char caract, int controle, int racional,int quebra_linha){
-    if(confere_numero(caract) || caract == 46){ // se numero ou ponto
-        if(caract == 46){
+
+    if(confere_numero(caract) || caract == 46){ // se numero ou ponto o caracter eh aceito
+        if(caract == 46){ //se for ponto eu marco o racional = 1 pra na hra q eu devolver a cadeia saber q eh racional
             racional = 1;
         }
-        controle = 0;
-    }else{
+        controle = 0; 
+    }else{// se nao for num ou ponto, ou eh caracter invalido ou quebra de linha/"\n" 
         if(confere_branco(caract)){
             quebra_linha = 1;
-        }else{
+        }else{// se nao for quebra de linha ai eh caracer invalido msmo eu marco com o controle = 1
             controle = 1;
         }
         
@@ -97,24 +99,27 @@ void checa_invalido_palavra(char caract, int controle, int quebra_linha){
 }
 
 void checa_invalido_comentario(char caract, int controle,int quebra_linha, char *arquivo){
-    FILE *teste_fim_arq;
-    teste_fim_arq = fopen(arquivo, "r");
+    FILE *teste_fim_arq; //variavel q recebe o arq q eu to lendo
+    teste_fim_arq = fopen(arquivo, "r");//abro pra leitura
 
-    if(!feof(teste_fim_arq)){
+    if(!feof(teste_fim_arq)){ // se nao ta no fim do arquivo entao continua lendo
         controle = 0;
-    }else{if(confere_branco(caract)){
-            quebra_linha = 1;
-        }else{
-            controle = 1;
-        }
-        
+    }else{
+        controle = 1;
     }
+    
+    if(caract == 32){ // se eu tiver quebra de linha o comentario para
+        quebra_linha = 1;
+    }
+        
 
 }
 
 void checa_invalido_reservado(char caract, int controle);
 
 int seleciona_automato(char caract, int controle){ 
+
+    //aqui n tem segredo, pra cada carct inicial eu tenho um automato definido
 
     if (confere_numero (caract)){
         controle = 1;
@@ -222,6 +227,52 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
     }
 
+    if(automato == 3){
+
+         int x=0;
+            while(cadeia[x] != NULL || x<29){
+                printf("&c", cadeia[x]);
+                x++;
+            }
+
+            printf(", comentario/n");
+            return 0;
+
+
+
+    }
+
+    if(automato == 4){
+
+         int x=0;
+            while(cadeia[x] != NULL || x<29){
+                printf("&c", cadeia[x]);
+                x++;
+            }
+
+            printf(", palavra reservada/n");
+            return 0;
+
+
+
+    }
+
+
+
+    if(automato == 5){
+
+            int x=0;
+                while(cadeia[x] != NULL || x<29){
+                    printf("&c", cadeia[x]);
+                    x++;
+                }
+
+                printf(", palavra invalida/n");
+                return 0;
+
+
+
+        }
 
 
 
@@ -234,11 +285,12 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
 int le_arq(char *arqler){
 
+    // inicializa as variaveis
     char cadeia[29];
     char buffer;
     int automato = 0;
-    int caracter_invalido = 0;
-    int controle_cadeia = 0;
+    int caracter_invalido = 0; //essas sao variaveis de controle pra saber qndo tem quebra de linha qndo o nmero eh racional etc
+    int controle_cadeia = 0; 
     int controle_racional = 0;
     int controle_quebra_linha = 0;
 
@@ -246,46 +298,53 @@ int le_arq(char *arqler){
         cadeia[a] = NULL;
     }
 
-    FILE *arquivo_em_leitura;
+    FILE *arquivo_em_leitura; //inicializa a variavel que vai pegar o arquivo a ser lido
  
-    arquivo_em_leitura = fopen(arqler, "r");
+    arquivo_em_leitura = fopen(arqler, "r");// variavel recebe o arquivo e o abre pra leitura
 
-    if(arquivo_em_leitura == NULL){
+    if(arquivo_em_leitura == NULL){ // checo se o arquivo ta vazio
         printf("Arquivo Vazio.\n");
     }
 
-    fseek(arquivo_em_leitura,1,SEEK_CUR);
+    fseek(arquivo_em_leitura,1,SEEK_CUR);// abro o arquivo e aponto sua leitura para o começo doa arquivo
 
-    fread(&buffer,1,1,arquivo_em_leitura);
+    fread(&buffer,1,1,arquivo_em_leitura);// variavel buffer vai receber os caracteres lidos
 
-    seleciona_automato(buffer,automato); // varialvel automato sai dessa func com o automato q eu to no momento
+    seleciona_automato(buffer,automato); // a varialvel "automato" sai dessa func com o automato q eu to no momento
 
 
-    checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha , arqler);
+    checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha , arqler);// checo o 1 caracter
 
-    while( !feof(arquivo_em_leitura) ){ // assumindo q 1 caracter eh valido
+    while( !feof(arquivo_em_leitura && caracter_invalido == 0) ){ // assumindo q 1 caracter eh valido
 
-        cadeia[controle_cadeia] = buffer;
-        fread(&buffer,1,1,arquivo_em_leitura);
-        controle_cadeia ++;
+        cadeia[controle_cadeia] = buffer; // cadeia recebe o primeiro caracter
+        fread(&buffer,1,1,arquivo_em_leitura);//buffer recebe o prox caracter
+        controle_cadeia ++;//essa variavel controla a posicao que o caracter entra na cadeia
 
+
+        //checo se o novo caracter eh valido
         checa_invalido_geral(buffer,caracter_invalido, automato, controle_racional, controle_quebra_linha, arqler);
         
-        if(controle_quebra_linha==1){
+        if(controle_quebra_linha==1){//se eu achei quebra de linha ou /n eu printo a cadeia e reseto ela pra receber novos caracteres
 
-            devolvo_cadeia();
+            devolvo_cadeia();//func q printa a cadeia e a qual grupo ela pertence
 
             for(int a=0; a<29; a++){ // zero a cadeia
                 cadeia[a] = NULL;
             }
 
-            controle_cadeia = 0;
+            controle_cadeia = 0; // reseto os controles
             controle_quebra_linha = 0;
 
         }
 
-        if (caracter_invalido == 1){
+        if (caracter_invalido == 1){// se eu achei caracter invalido e chamo a func que trata os erros
             chamada_de_erro();
+             controle_cadeia = 0; // reseto os controles
+        }
+
+        if(controle_cadeia == 29){// aqui o erro se da por atingir o tam max da cadeia
+            chamada_de_erro();// tenho q passar nessa func caracter invalido e tam da cadeia, pra ele decidir se o erro eh por exceder tam ou caracter invalido
         }
 
     }
