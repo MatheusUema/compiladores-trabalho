@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) { //Compilador
     analisador_lexico(argv[1]);
 
 
-
 }
 
 int analisador_lexico (char *arquivo){
