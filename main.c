@@ -246,7 +246,7 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
             }; 
             
             if(strncmp(cadeia, "real",4)==0){
-                printf(", comando_reservado_ral\n");
+                printf(", comando_reservado_real\n");
                 return 0;
             };
             
@@ -322,7 +322,8 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
     if(automato == 4){ //se automato 4 entao to em simbolos reservados
 
-         int x=0;
+        int x=0;
+        
             while(cadeia[x] != NULL || x<29){
                 printf("&c", cadeia[x]);
                 x++;
@@ -351,70 +352,66 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
              if(strncmp(cadeia, ">",1)==0){
                  if(strncmp(cadeia, ">=",1)==0){
                       printf(", comando_reservado_maior_igual\n");
+                      return 0;
                  }
                 printf(", comando_reservado_maior\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, ":",1)==0){
+                 if(strncmp(cadeia, ":=",2)==0){
+                     printf(", comando_reservado_atribuicao\n");
+                     return 0;
+                 }
+                printf(", comando_reservado_dois_pontos\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+
+             if(strncmp(cadeia, "+",1)==0){
+                printf(", comando_reservado_mais\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, "-",1)==0){
+                printf(", comando_reservado_menos\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, "*",1)==0){
+                printf(", comando_reservado_asterisco\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, "/",1)==0){
+                printf(", comando_reservado_barra\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, ";",1)==0){
+                printf(", comando_reservado_ponto_virgula\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, ".",1)==0){
+                printf(", comando_reservado_ponto\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, ",",1)==0){
+                printf(", comando_reservado_virgula\n");
                 return 0;
             };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
-                return 0;
-            };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
-                return 0;
-            };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
-                return 0;
-            };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
-                return 0;
-            };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
-                return 0;
-            };
-             if(strncmp(cadeia, "for",3)==0){
-                printf(", comando_reservado_for\n");
+
+             if(strncmp(cadeia, "(",1)==0){
+                printf(", comando_reservado_abre_parenteses\n");
                 return 0;
             };
             
-            printf(", palavra reservada/n");
-            return 0;
-
+             if(strncmp(cadeia, ")",3)==0){
+                printf(", comando_reservado_fecha_parenteses\n");
+                return 0;
+            };
 
 
     }
