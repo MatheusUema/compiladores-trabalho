@@ -47,6 +47,8 @@ int analisador_lexico (char *arquivo){
         return 0;
     } 
     printf("Início da análise léxica do arquivo \n\n");
+
+
     /* INÍCIO DA LEITURA DO ARQUIVO */
     while(!feof(arquivo_entrada)) {
 
@@ -56,7 +58,6 @@ int analisador_lexico (char *arquivo){
             e, em seguida, parte cada a Análise da cadeia, tendo o conhecimento de qual automato será utilizado */
             automato = inicio_cadeia(cadeia, arquivo_entrada, &controle_arquivo); // a varialvel "automato" sai dessa func com o automato q eu to no momento
             controle_cadeia++;
-
         } else {    
 
             /*ANÁLISE DO RESTO DA CADEIA */
@@ -64,26 +65,28 @@ int analisador_lexico (char *arquivo){
             cadeia[controle_cadeia] = buffer;
             controle_cadeia++;
             caracter_valido = check_valido_geral(buffer, automato, &controle_racional);
-            printf("racional eh %d", controle_racional);
-            if ( !(caracter_valido)) {
+            if (condicao_final(buffer,automato)){
 
-                cadeia[controle_cadeia-1] = '\0';
-                printf("caracter invalido detectado -- cadeia reconhecida %s \n", cadeia);
-                acerto = 0;
-                devolve_cadeia(cadeia, automato, arquivo_saida, acerto, controle_racional);
-                controle_racional = 0;
-                controle_arquivo = controle_arquivo + controle_cadeia + 1;
-                controle_cadeia = 0;
-
-            } else if (condicao_final(buffer,automato)){
-
+                acerto = 1;
+                cadeia[controle_cadeia - 1] = '\0';
                 printf("condicao final atingida -- cadeia reconhecida %s \n", cadeia);
                 devolve_cadeia(cadeia, automato, arquivo_saida, acerto, controle_racional);
                 controle_racional = 0;
                 controle_arquivo = controle_arquivo + controle_cadeia;
                 controle_cadeia = 0;
 
-            } 
+            } else if (!(caracter_valido) ) {
+
+                cadeia[controle_cadeia - 1] = '\0';
+                printf("caracter invalido detectado -- cadeia reconhecida %s \n", cadeia);
+                acerto = 0;
+                devolve_cadeia(cadeia, automato, arquivo_saida, acerto, controle_racional);
+                controle_arquivo = controle_arquivo + controle_cadeia;
+                controle_arquivo = controle_arquivo - 1;
+                controle_cadeia = 0;
+                controle_racional = 0;
+
+            }
         }
     }
     cadeia[controle_cadeia-1] = '\0';
@@ -168,13 +171,12 @@ int check_valido_geral (char buffer, int automato, int* racional) {
         se existe apenas um único . na cadeia */
         if(confere_numero(buffer)){
              return 1;
-        } else if( (buffer = '.')) {
-            *racional++;
+        } else if( (buffer == '.')) {
+            *racional = *racional + 1;
             if(*racional >= 2) return 0;
             return 1;
         }
         return 0;
-    
     } 
 
     if (automato == 2){ //Automato de identificadores reservadas
@@ -196,11 +198,10 @@ int inicio_cadeia (char cadeia[], FILE* arquivo, int* controle_arquivo){
     for(int a=0; a<29; a++){ // zero a cadeia igualando ela a (null) da tabela ASCII
         cadeia[a] = 0; 
     }
-
     //Inicia cadeia e seleciona o automato que será utilizado
     fseek(arquivo, *controle_arquivo, SEEK_SET);
     fread(&cadeia[0], 1, 1, arquivo);
-    while (confere_branco(cadeia[0])) {
+    while (confere_branco(cadeia[0]) && !feof(arquivo)) {
         fread(&cadeia[0], 1, 1, arquivo);
         *controle_arquivo++;
     }
