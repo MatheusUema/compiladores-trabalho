@@ -51,6 +51,7 @@ int confere_numero (char caract){
 }
 
 int confere_letra (char caract) {
+    //Confere se caracter é letra minúscula ou maiúscula
      if ((caract >= 65 && caract <= 90) || (caract >= 97 && caract <= 122)){
         return 1;
     } 
@@ -58,6 +59,7 @@ int confere_letra (char caract) {
 }
 
 int confere_branco (char caract) {
+    //Confere se caracter checado é espaço ou quebra de linha;
      if (caract == 32 || caract == 10){
         return 1;
     } 
@@ -71,7 +73,7 @@ void checa_invalido_num(char caract, int controle, int racional,int quebra_linha
             racional = 1;
         }
         controle = 0; 
-    }else{// se nao for num ou ponto, ou eh caracter invalido ou quebra de linha/"\n" 
+    } else { // se nao for num ou ponto, ou eh caracter invalido ou quebra de linha/"\n" 
         if(confere_branco(caract)){
             quebra_linha = 1;
         }else{// se nao for quebra de linha ai eh caracer invalido msmo eu marco com o controle = 1
@@ -121,27 +123,27 @@ int seleciona_automato(char caract, int controle){
 
     //aqui n tem segredo, pra cada carct inicial eu tenho um automato definido
 
-    if (confere_numero (caract)){
+    if (confere_numero (caract)){ //Automato de números reais e inteiros
         controle = 1;
         return 0;
     }
 
-    if(confere_letra(caract)){
+    if(confere_letra(caract)){ //Autômato para identificadores e palavras reservadas
         controle = 2;
         return 0;
     }
 
-    if (caract == 123){
+    if (caract == 123){ //Autômato para comentários
         controle = 3;
         return 0;
     }
 
-    if (confere_reservado(caract)){
+    if (confere_reservado(caract)){ //Autômato para símbolos reservados
         controle = 4;
         return 0;
     }
         
-    if(confere_branco(caract) == 0){
+    if(confere_branco(caract) == 0){ //Checagem para espaços brancos e quebras de linha.
         controle = 5;
         return 0;
     }
@@ -158,7 +160,7 @@ int checa_invalido_geral (char caract, int controle, int automato, int racional,
     }
 
     if (automato == 2){
-        checa_invalido_palavra(caract,controle,quebra_linha);
+        checa_valido_palavra(caract,controle,quebra_linha);
         //analise de quebra de linha
         return 0;
     }
@@ -178,9 +180,6 @@ int checa_invalido_geral (char caract, int controle, int automato, int racional,
         controle = 1;
         return 0;
     }
-
-
-
 
 }
 
@@ -442,7 +441,6 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
 
 
 }
-
 
 
 
