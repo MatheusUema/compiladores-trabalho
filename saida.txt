@@ -1,0 +1,6 @@
+Analise lexica: 
+10.10 , num_int 
+Analise lexica: 
+10.10 , num_int 
+Analise lexica: 
+10.10 , num_int 
