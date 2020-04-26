@@ -1,0 +1,7 @@
+Analise lexica: 
+program, comando_reservado_program
+prog, identificador
+g, identificador
+@, simbolo_nao_reconhecido
+begin, comando_reservado_begin
+for, comando_reservado_for
