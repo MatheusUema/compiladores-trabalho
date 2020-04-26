@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "main.h"
 
 int main(int argc, char *argv[]) { //Compilador
@@ -220,8 +221,87 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
                 x++;
             }
 
-            printf(", comando/n");
-            return 0;
+            if(strncmp(cadeia, "program",7)==0){
+                printf(", comando_reservado_program\n");
+                return 0;
+            };
+
+             if(strncmp(cadeia, "begin",5)==0){
+                printf(", comando_reservado_begin\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "end",3)==0){
+                printf(", comando_reservado_end\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "const",5)==0){
+                printf(", comando_reservado_const\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "var",3)==0){
+                printf(", comando_reservado_var\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "real",4)==0){
+                printf(", comando_reservado_ral\n");
+                return 0;
+            };
+            
+             if(strncmp(cadeia, "integer",7)==0){
+                printf(", comando_reservado_integer\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "procedure",9)==0){
+                printf(", comando_reservado_procedure\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "else",4)==0){
+                printf(", comando_reservado_else\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "read",4)==0){
+                printf(", comando_reservado_read\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "write",5)==0){
+                printf(", comando_reservado_write\n");
+                return 0;
+            };
+            
+             if(strncmp(cadeia, "while",5)==0){
+                printf(", comando_reservado_while\n");
+                return 0;
+            };
+            
+             if(strncmp(cadeia, "do",2)==0){
+                printf(", comando_reservado_do\n");
+                return 0;
+            };
+            
+             if(strncmp(cadeia, "for",2)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "if",2)==0){
+                printf(", comando_reservado_if\n");
+                return 0;
+            }; 
+            
+            if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+
+           
 
 
     }
@@ -249,6 +329,90 @@ int devolvo_cadeia(char cadeia [29], int controle, int automato, int racional){
                 x++;
             }
 
+             if(strncmp(cadeia, "=",1)==0){
+                printf(", comando_reservado_igual\n");
+                return 0;
+            };
+
+             if(strncmp(cadeia, "<",1)==0){
+                 if(strncmp(cadeia, "<>",2)==0){
+                      printf(", comando_reservado_menor_maior\n");
+                      return 0;
+                 }
+
+                 if(strncmp(cadeia, "<=",2)==0){
+                     printf(", comando_reservado_menor_igual\n");
+                     return 0;
+                 }
+                printf(", comando_reservado_menor\n");
+                return 0;
+            };
+
+
+             if(strncmp(cadeia, ">",1)==0){
+                 if(strncmp(cadeia, ">=",1)==0){
+                      printf(", comando_reservado_maior_igual\n");
+                 }
+                printf(", comando_reservado_maior\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+             if(strncmp(cadeia, "for",3)==0){
+                printf(", comando_reservado_for\n");
+                return 0;
+            };
+            
             printf(", palavra reservada/n");
             return 0;
 
