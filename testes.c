@@ -189,6 +189,10 @@ int check_valido_geral (char buffer, int automato, int* racional) {
         return 1;
     }
 
+    if(automato == 4) {
+        if (confere_reservado(buffer) || !(confere_branco(buffer))) return 1;
+    }
+
     return 0;
 }
 
@@ -320,8 +324,89 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
 
     if (automato == 4) {
         if(acerto){
-            fprintf(saida, "%s, simbolo \n", cadeia);
-            return 1;
+            if(strncmp(cadeia, "=",1)==0){
+                fprintf(saida, "%s, comando_reservado_igual\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, "<",1)==0){
+                 if(strncmp(cadeia, "<>",2)==0){
+                      fprintf(saida, "%s, comando_reservado_diferente\n", cadeia);
+                      return 1;
+                 }
+
+                 if(strncmp(cadeia, "<=",2)==0){
+                     fprintf(saida, "%s, comando_reservado_menor_igual\n", cadeia);
+                     return 1;
+                 }
+                fprintf(saida, "%s, comando_reservado_menor\n", cadeia);
+                return 1;
+            };
+
+
+             if(strncmp(cadeia, ">",1)==0){
+                 if(strncmp(cadeia, ">=",2)==0){
+                      fprintf(saida, "%s, comando_reservado_maior_igual\n", cadeia);
+                      return 1;
+                 }
+                fprintf(saida, "%s, comando_reservado_maior\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, ":",1)==0){
+                 if(strncmp(cadeia, ":=",2)==0){
+                    fprintf(saida, "%s, comando_reservado_atribuicao\n", cadeia);
+                     return 0;
+                 }
+                fprintf(saida, "%s, comando_reservado_dois_pontos\n", cadeia);
+                return 1;
+            };
+
+
+             if(strncmp(cadeia, "+",1)==0){
+                fprintf(saida, "%s, comando_reservado_mais\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, "-",1)==0){
+                fprintf(saida, "%s, comando_reservado_menos\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, "*",1)==0){
+                fprintf(saida, "%s, comando_reservado_asterisco\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, "/",1)==0){
+                fprintf(saida, "%s, comando_reservado_barra\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, ";",1)==0){
+                fprintf(saida, "%s, comando_reservado_ponto_virgula\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, ".",1)==0){
+                fprintf(saida, "%s, comando_reservado_ponto\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, ",",1)==0){
+                fprintf(saida, "%s, comando_reservado_virgula\n", cadeia);
+                return 1;
+            };
+
+             if(strncmp(cadeia, "(",1)==0){
+                fprintf(saida, "%s, comando_reservado_abre_parenteses\n", cadeia);
+                return 1;
+            };
+            
+             if(strncmp(cadeia, ")",3)==0){
+                fprintf(saida, "%s, comando_reservado_fecha_parenteses\n", cadeia);
+                return 1;
+            };
         } else {
             fprintf(saida, "%s, simbolo_nao_reconhecido\n", cadeia);
             return 1;
@@ -345,6 +430,10 @@ int condicao_final(char buffer, int automato) {
     if (automato == 3){
         if(buffer == '}') return 1;
         return 0;
+    }
+
+    if(automato==4){
+        if(!confere_reservado(buffer)) return 1;
     }
     return 0;
 }
