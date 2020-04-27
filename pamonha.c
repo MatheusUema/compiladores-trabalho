@@ -229,82 +229,78 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
     }
 
     if (automato == 2) {
-        if(strncmp(cadeia, "program",7)==0){
+        if(strcmp(cadeia, "program")==0){
                 fprintf( saida, "%s, comando_reservado_program\n", cadeia);
                 return 1;
             };
 
-             if(strncmp(cadeia, "begin",5)==0){
+             if(strcmp(cadeia, "begin")==0){
                 fprintf( saida, "%s, comando_reservado_begin\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "end",3)==0){
+            if(strcmp(cadeia, "end")==0){
                 fprintf(saida, "%s, comando_reservado_end\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "const",5)==0){
+            if(strcmp(cadeia, "const")==0){
                 fprintf(saida, "%s, comando_reservado_const\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "var",3)==0){
+            if(strcmp(cadeia, "var")==0){
                 fprintf(saida, "%s, comando_reservado_var\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "real",4)==0){
-                fprintf(saida, "%s, comando_reservado_ral\n", cadeia);
+            if(strcmp(cadeia, "real")==0){
+                fprintf(saida, "%s, comando_reservado_real\n", cadeia);
                 return 1;
             };
             
-             if(strncmp(cadeia, "integer",7)==0){
+             if(strcmp(cadeia, "integer")==0){
                 fprintf(saida, "%s, comando_reservado_integer\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "procedure",9)==0){
+            if(strcmp(cadeia, "procedure")==0){
                 fprintf(saida, "%s, comando_reservado_procedure\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "else",4)==0){
+            if(strcmp(cadeia, "else")==0){
                 fprintf(saida, "%s, comando_reservado_else\n",cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "read",4)==0){
+            if(strcmp(cadeia, "read")==0){
                 fprintf(saida, "%s, comando_reservado_read\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "write",5)==0){
+            if(strcmp(cadeia, "write")==0){
                 fprintf(saida, "%s, comando_reservado_write\n", cadeia);
                 return 1;
             };
             
-             if(strncmp(cadeia, "while",5)==0){
+             if(strcmp(cadeia, "while")==0){
                 fprintf(saida, "%s, comando_reservado_while\n", cadeia);
                 return 1;
             };
             
-             if(strncmp(cadeia, "do",2)==0){
+             if(strcmp(cadeia, "do")==0){
                 fprintf(saida, "%s, comando_reservado_do\n", cadeia);
                 return 1;
             };
             
-             if(strncmp(cadeia, "for",2)==0){
-                fprintf(saida, "%s, comando_reservado_for\n", cadeia);
-                return 1;
-            }; 
             
-            if(strncmp(cadeia, "if",2)==0){
+            if(strcmp(cadeia, "if")==0){
                 fprintf(saida, "%s, comando_reservado_if\n", cadeia);
                 return 1;
             }; 
             
-            if(strncmp(cadeia, "for",3)==0){
+            if(strcmp(cadeia, "for")==0){
                 fprintf(saida, "%s, comando_reservado_for\n", cadeia);
                 return 1;
             };
@@ -323,18 +319,21 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
     }
 
     if (automato == 4) {
+          
         if(acerto && strlen(cadeia)<3){
+            
  
             if(strncmp(cadeia, "=",1)==0 && cadeia[1] == '\0'){
                  fprintf(saida, "%s, comando_reservado_igual\n", cadeia);
                 return 1;
             };
 
-             if(strcmp(cadeia, "<")==0 ){
+             if(strncmp(cadeia, "<", 1)==0 ){
+                
                   
                  if(strcmp(cadeia, "<>" )==0 ){
                       fprintf(saida, "%s, comando_reservado_diferente\n", cadeia);
-                      // fprintf(saida, "%c, comando_reservado_igual\n", cadeia[1]);
+                    
                       return 1;
                  }
 
