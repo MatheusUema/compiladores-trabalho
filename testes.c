@@ -73,6 +73,7 @@ int analisador_lexico (char *arquivo){
                 devolve_cadeia(cadeia, automato, arquivo_saida, acerto, controle_racional);
                 controle_racional = 0;
                 controle_arquivo = controle_arquivo + controle_cadeia;
+                controle_arquivo = controle_arquivo - 1;
                 controle_cadeia = 0;
 
             } else if (!(caracter_valido) ) {
@@ -206,7 +207,7 @@ int inicio_cadeia (char cadeia[], FILE* arquivo, int* controle_arquivo){
     fread(&cadeia[0], 1, 1, arquivo);
     while (confere_branco(cadeia[0]) && !feof(arquivo)) {
         fread(&cadeia[0], 1, 1, arquivo);
-        *controle_arquivo++;
+        *controle_arquivo = *controle_arquivo + 1;;
     }
     printf("Analisando caracter %c \n", cadeia[0]);
     return seleciona_automato(cadeia[0]);
@@ -214,7 +215,6 @@ int inicio_cadeia (char cadeia[], FILE* arquivo, int* controle_arquivo){
 }
 
 int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int racional){
-    fflush(saida);
     if (automato == 1){
         if(acerto && !racional){
             fprintf(saida, "%s, num_int \n", cadeia);
@@ -407,6 +407,8 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
                 fprintf(saida, "%s, comando_reservado_fecha_parenteses\n", cadeia);
                 return 1;
             };
+            fprintf(saida, "%s, simbolo_nao_reconhecido\n", cadeia);
+            return 1;
         } else {
             fprintf(saida, "%s, simbolo_nao_reconhecido\n", cadeia);
             return 1;
