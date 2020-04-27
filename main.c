@@ -12,11 +12,8 @@ int main(int argc, char *argv[]) { //Compilador
         printf("[ERRO] Arquivo a ser lido não enviado\n");
         return 0;
     }
-    
-
     /* Função que chama o Analisador Léxico */
     analisador_lexico(argv[1]);
-
 
 }
 
