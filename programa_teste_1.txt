@@ -1,45 +1,7 @@
-program
-programs
-
+program p;
+var x@: integer;
 begin
-begins
-
-end
-ends
-
-const
-consts
-
-var
-vars
-
-real
-reals
-
-integer
-integers
-
-procedure
-procedures
-
-else
-elses
-
-read
-reads
-
-write
-writes
-
-while
-whiless
-
-do
-dos
-
-for
-fors
-
-if
-ifs
-
+    x:=1;
+    while (x<3) do
+        x:=x+1;
+end.
