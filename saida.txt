@@ -1,3 +1,4 @@
 Analise lexica: 
-<><, simbolo_nao_reconhecido
-<>, simbolo_nao_reconhecido
+program, comando_reservado_program
+p, identificador
+;, comando_reservado_ponto_virgula
