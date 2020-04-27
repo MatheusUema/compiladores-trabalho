@@ -68,12 +68,16 @@ int analisador_lexico (char *arquivo){
             if (condicao_final(buffer,automato)){
 
                 acerto = 1;
-                cadeia[controle_cadeia - 1] = '\0';
+                if(automato != 3) {
+                    cadeia[controle_cadeia - 1] = '\0';
+                }
                 printf("condicao final atingida -- cadeia reconhecida %s \n", cadeia);
                 devolve_cadeia(cadeia, automato, arquivo_saida, acerto, controle_racional);
                 controle_racional = 0;
                 controle_arquivo = controle_arquivo + controle_cadeia;
-                controle_arquivo = controle_arquivo - 1;
+                if(automato != 3) {
+                    controle_arquivo = controle_arquivo - 1;
+                }                
                 controle_cadeia = 0;
 
             } else if (!(caracter_valido) ) {
