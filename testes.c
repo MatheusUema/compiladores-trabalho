@@ -329,13 +329,13 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
                 return 1;
             };
 
-             if(strncmp(cadeia, "<",1)==0){
-                 if(strncmp(cadeia, "<>",2)==0){
+             if(strcmp(cadeia, "<")==0){
+                 if(strcmp(cadeia, "<>")==0){
                       fprintf(saida, "%s, comando_reservado_diferente\n", cadeia);
                       return 1;
                  }
 
-                 if(strncmp(cadeia, "<=",2)==0){
+                 if(strcmp(cadeia, "<=")==0){
                      fprintf(saida, "%s, comando_reservado_menor_igual\n", cadeia);
                      return 1;
                  }
@@ -363,7 +363,7 @@ int devolve_cadeia(char cadeia [], int automato, FILE* saida, int acerto,int rac
             };
 
 
-             if(strncmp(cadeia, "+",1)==0){
+             if(strcmp(cadeia, "+")==0){
                 fprintf(saida, "%s, comando_reservado_mais\n", cadeia);
                 return 1;
             };
