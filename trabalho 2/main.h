@@ -36,9 +36,9 @@ char* parametros();
 
 char* corpo_p();
 
-int comandos();
+char* comandos();
 
-int cmd();
+char* cmd();
 
 int condicao();
 

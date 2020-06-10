@@ -985,6 +985,8 @@ int corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *contro
 }
 
 // int comandos() // Esse aqui acho que tá errado,não consegui pensar num jeito em que cmd não precise ser executado
+
+
 // {
 //     cmd();
 //     while (token == ';')
