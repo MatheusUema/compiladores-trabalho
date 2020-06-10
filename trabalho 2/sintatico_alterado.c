@@ -577,17 +577,6 @@ int condicao_final(char buffer, int automato)
 
 int programa(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha)
 {
-    // int controle_arquivo = *controle_arq;
-    // int linha = *numero_linha;
-    // int i = 0;
-    // while(i != 15){
-    //     printf(" controle arquivo: %d  \n", *controle_arq);
-    //     printf(" numero linha: %d \n", *numero_linha);
-    //     token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-    //     printf(" token: %s \n", token);
-    //     i++;
-    // }
-
     if (strcmp(token, "comando_reservado_program") == 0)
     {
         printf("'program' lido\n");
@@ -995,7 +984,7 @@ char* corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *cont
         if (strcmp(token, "comando_reservado_end") == 0)
         {
             printf("'end' lido\n");
-            free(toke);
+            free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             printf("token: %s \n", token);
             if (strcmp(token, "comando_reservado_ponto_virgula") == 0)
