@@ -24,17 +24,17 @@ int condicao_final( char buffer, int automato);
 
 int programa();
 
-int dc_c();
+char* dc_c();
 
-int dc_v();
+char* dc_v();
 
-int variaveis();
+char* variaveis();
 
-int dc_p();
+char* dc_p();
 
-int parametros();
+char* parametros();
 
-int corpo_p();
+char* corpo_p();
 
 int comandos();
 
