@@ -22,6 +22,8 @@ char* devolve_cadeia(char cadeia[], int automato, int acerto, int racional, FILE
 
 int condicao_final( char buffer, int automato);
 
+char* erro();
+
 int programa();
 
 char* dc_c();
