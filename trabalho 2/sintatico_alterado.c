@@ -383,6 +383,12 @@ char *devolve_cadeia(char cadeia[], int automato, int acerto, int racional, FILE
             return token;
         };
 
+        if (strcmp(cadeia, "to") == 0)
+        {
+            strncpy(token, "comando_reservado_to", token_size);
+            return token;
+        };
+
         if (strcmp(cadeia, "if") == 0)
         {
             strncpy(token, "comando_reservado_if", token_size);
@@ -583,7 +589,6 @@ char *erro(char *token, char *token_esperado[], int size, FILE *arquivo_entrada,
     printf("entrou na erro \n");
     while (!feof(arquivo_entrada))
     {
-        printf("token: %s \n", token);
         for (int i = 0; i < size; i++)
         {
             if (strcmp(token, token_esperado[i]) == 0)
@@ -600,6 +605,8 @@ int programa(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *contr
     int modo_panico = -1; // Modo pânico desativado
     token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
     printf("token: %s \n", token);
+
+
 
     if (strcmp(token, "comando_reservado_program") == 0)
     {
@@ -690,7 +697,11 @@ int programa(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *contr
         token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
     }
 
-    token = dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, &modo_panico);
+    char* tokens_seguidores_dc_v[2];
+    tokens_seguidores_dc_v [0] = "begin";
+    tokens_seguidores_dc_v [1] = "procedure";
+
+    token = dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, &modo_panico, tokens_seguidores_dc_v, 2);
     printf("voltei para programa()\n");
 
     if (strcmp(token, "comando_reservado_procedure") != 0 && strcmp(token, "comando_reservado_begin") != 0)
@@ -858,9 +869,10 @@ char *dc_c(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
     dc_c(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
 }
 
-char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
+char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico, char* tokens_seguidores[], int tamanho)
 {
     printf("entrei em dc_v()\n");
+    int tam_tokens = 0;
     if (strcmp(token, "comando_reservado_var") != 0)
     {
         printf("token: %s \n", token);
@@ -874,7 +886,9 @@ char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+        char* tokens_seguidores_variaveis[1];
+        tokens_seguidores_variaveis[0] = "comando_reservado_dois_pontos";
+        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
     }
 
     if (strcmp(token, "comando_reservado_dois_pontos") == 0)
@@ -889,15 +903,16 @@ char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
     {
         *modo_panico = 1;
         printf("Erro sintático na linha %d: ':' esperado\n", *numero_linha);
-        // char *token_esperados[5];
-        // token_esperados[0] = "comando_reservado_igual";
-        // token_esperados[1] = "comando_reservado_const";
-        // token_esperados[2] = "comando_reservado_var";
-        // token_esperados[3] = "comando_reservado_procedure";
-        // token_esperados[4] = "comando_reservado_begin";
-        // int tamanho = sizeof(token_esperados) / 8;
-        // token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        // printf("token: %s \n", token);
+        tam_tokens = 3 + tamanho;
+        char *token_esperados[tam_tokens];
+        token_esperados[0] = "comando_reservado_integer";
+        token_esperados[1] = "comando_reservado_real";
+        token_esperados[2] = "comando_reservado_var";
+        for(int i = 0; i < tamanho; i++){
+            token_esperados[i + 3] = tokens_seguidores[i];
+        }
+        token = erro(token, token_esperados, tam_tokens, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        printf("token: %s \n", token);
     }
     if ((strcmp(token, "comando_reservado_integer") == 0) || (strcmp(token, "comando_reservado_real") == 0))
     {
@@ -915,15 +930,15 @@ char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
     {
         *modo_panico = 1;
         printf("Erro sintático na linha %d: 'número' esperado\n", *numero_linha);
-        // char *token_esperados[5];
-        // token_esperados[0] = "comando_reservado_igual";
-        // token_esperados[1] = "comando_reservado_const";
-        // token_esperados[2] = "comando_reservado_var";
-        // token_esperados[3] = "comando_reservado_procedure";
-        // token_esperados[4] = "comando_reservado_begin";
-        // int tamanho = sizeof(token_esperados) / 8;
-        // token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        // printf("token: %s \n", token);
+        tam_tokens = 2 + tamanho;
+        char *token_esperados[tam_tokens];
+        token_esperados[0] = "comando_reservado_ponto_virgula";
+        token_esperados[1] = "comando_reservado_var";
+         for(int i = 0; i < tamanho; i++){
+            token_esperados[i + 2] = tokens_seguidores[i];
+        }
+        token = erro(token, token_esperados, tam_tokens, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        printf("token: %s \n", token);
     }
     if (strcmp(token, "comando_reservado_ponto_virgula") == 0)
     {
@@ -937,21 +952,21 @@ char *dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
     {
         *modo_panico = 1;
         printf("Erro sintático na linha %d: 'número' esperado\n", *numero_linha);
-        // char *token_esperados[5];
-        // token_esperados[0] = "comando_reservado_igual";
-        // token_esperados[1] = "comando_reservado_const";
-        // token_esperados[2] = "comando_reservado_var";
-        // token_esperados[3] = "comando_reservado_procedure";
-        // token_esperados[4] = "comando_reservado_begin";
-        // int tamanho = sizeof(token_esperados) / 8;
-        // token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        // printf("token: %s \n", token);
+        tam_tokens = 1 + tamanho;
+        char *token_esperados[tam_tokens];
+        token_esperados[0] = "comando_reservado_var";
+         for(int i = 0; i < tamanho; i++){
+            token_esperados[i + 1] = tokens_seguidores[i];
+        }
+        token = erro(token, token_esperados, tam_tokens, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        printf("token: %s \n", token);
     }
-    dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+    dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores, tamanho);
 }
 
-char *variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
-{
+char *variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico, char* tokens_seguidores[], int tamanho)
+{   
+    int tam_tokens = 0;
     printf("entrei em variaveis()\n");
     if (strcmp(token, "identificador") == 0)
     {
@@ -965,15 +980,14 @@ char *variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *co
     {
         *modo_panico = 1;
         printf("Erro sintático na linha %d: 'identificador' esperado\n", *numero_linha);
-        // char *token_esperados[5];
-        // token_esperados[0] = "comando_reservado_igual";
-        // token_esperados[1] = "comando_reservado_const";
-        // token_esperados[2] = "comando_reservado_var";
-        // token_esperados[3] = "comando_reservado_procedure";
-        // token_esperados[4] = "comando_reservado_begin";
-        // int tamanho = sizeof(token_esperados) / 8;
-        // token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        // printf("token: %s \n", token);
+        tam_tokens = 1 + tamanho;
+        char *token_esperados[tam_tokens];
+        token_esperados[0] = "comando_reservado_virgula";
+        for(int i = 0; i < tamanho; i ++){
+            token_esperados[i + 1] = tokens_seguidores[i];
+        }
+        token = erro(token, token_esperados, tam_tokens, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        printf("token: %s \n", token);
     }
     if (strcmp(token, "comando_reservado_virgula") != 0)
     {
@@ -983,11 +997,12 @@ char *variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *co
     }
     else // Presumi aqui que se um simbolo não é diferente de ',', ele é igual
     {
+        *modo_panico = -1;
         printf("',' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+        variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores, tamanho);
     }
 }
 
@@ -1008,6 +1023,9 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
     }
+
+
+
     if (strcmp(token, "identificador") == 0)
     {
         *modo_panico = -1;
@@ -1015,22 +1033,34 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        token = parametros(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
         printf("Erro sintático na linha %d: 'identificador' esperado\n", *numero_linha);
-        // char *token_esperados[5];
-        // token_esperados[0] = "comando_reservado_igual";
-        // token_esperados[1] = "comando_reservado_const";
-        // token_esperados[2] = "comando_reservado_var";
-        // token_esperados[3] = "comando_reservado_procedure";
-        // token_esperados[4] = "comando_reservado_begin";
-        // int tamanho = sizeof(token_esperados) / 8;
-        // token = erro(token, token_esperados, tamanho, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        // printf("token: %s \n", token);
+        char *token_esperados[3];
+        token_esperados[0] = "comando_reservado_abre_parenteses";
+        token_esperados[1] = "comando_reservado_procedure";
+        token_esperados[2] = "comando_reservado_begin";
+        token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        printf("token: %s \n", token);
     }
+
+    //Tratamento de erros: caso não seja ; ou (
+    if( strcmp(token, "comando_reservado_ponto_virgula") != 0 && strcmp(token, "comando_reservado_abre_parenteses") != 0){
+        *modo_panico = 1;
+        printf("Erro sintático na linha %d: ';' ou '(' esperado\n", *numero_linha);
+        char *token_esperados[4];
+        token_esperados[0] = "comando_reservado_abre_parenteses";
+        token_esperados[1] = "comando_reservado_ponto_virgula";
+        token_esperados[2] = "comando_reservado_procedure";
+        token_esperados[3] = "comando_reservado_begin";
+        token = erro(token, token_esperados, 4, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+    }
+
+    token = parametros(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+
+
     if (strcmp(token, "comando_reservado_ponto_virgula") == 0)
     {
         *modo_panico = -1;
@@ -1061,6 +1091,8 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
 char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
 {
     printf("entrei em parametros()\n");
+    char* tokens_seguidores_variaveis[1];
+    tokens_seguidores_variaveis[0] = "comando_reservado_dois_pontos";
 
     if (strcmp(token, "comando_reservado_abre_parenteses") != 0)
     {
@@ -1075,7 +1107,8 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+
+        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
         printf("token: %s \n", token);
     }
     if (strcmp(token, "comando_reservado_dois_pontos") == 0)
@@ -1128,7 +1161,7 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
         printf("token: %s \n", token);
         if (strcmp(token, "comando_reservado_dois_pontos") == 0)
         {
@@ -1205,7 +1238,10 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
 char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
 {
     printf("entrei em corpo_p()\n");
-    token = dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+
+    char* tokens_seguidores_dc_v[1];
+    tokens_seguidores_dc_v[0] = "comando_reservado_begin";
+    token = dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_dc_v, 1);
     if (strcmp(token, "comando_reservado_begin") == 0)
     {
         *modo_panico = -1;
@@ -1319,7 +1355,9 @@ char *comandos(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *con
 }
 
 char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
-{
+{   
+    char* tokens_seguidores_variaveis[1];
+    tokens_seguidores_variaveis[0] = "comando_reservado_fecha_parenteses";
     printf("entrei em cmd() \n");
     if (strcmp(token, "comando_reservado_read") == 0)
     {
@@ -1336,7 +1374,7 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
             free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             printf("token: %s \n", token);
-            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
         }
 
         else if (*modo_panico == -1)
@@ -1394,7 +1432,7 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
             free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             printf("token: %s \n", token);
-            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
         }
 
         else if (*modo_panico == -1)
@@ -1452,7 +1490,7 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
             free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             printf("token: %s \n", token);
-            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
         }
         else if (*modo_panico == -1)
         {
@@ -1526,7 +1564,7 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         printf("token: %s \n", token);
-        token = condicao(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+        // token = condicao(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
 
         if (strcmp(token, "comando_reservado_then") == 0)
         {
@@ -1585,14 +1623,14 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
             free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             printf("token: %s \n", token);
-            token = expressao(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            // token = expressao(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
             printf("sai de cmd() \n");
             return token;
         }
 
         else
         {
-            token = lista_arg(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            // token = lista_arg(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
             printf("sai de cmd() \n");
             return token;
         }

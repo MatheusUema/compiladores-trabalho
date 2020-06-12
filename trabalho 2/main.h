@@ -42,14 +42,14 @@ char* comandos();
 
 char* cmd();
 
-int condicao();
+char* condicao();
 
 int fator();
 
-int expressao();
+char* expressao();
 
 int termo();
 
-int lista_arg();
+char* lista_arg();
 
 #endif
