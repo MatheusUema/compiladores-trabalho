@@ -22,15 +22,15 @@ char* devolve_cadeia(char cadeia[], int automato, int acerto, int racional, FILE
 
 int condicao_final( char buffer, int automato);
 
-char* erro();
+char* erro(char *token, char *token_esperado[], int size, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha);
 
-int programa();
+int programa(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha);
 
-char* dc_c();
+char* dc_c(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico);
 
-char* dc_v();
+char* dc_v(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico, char *tokens_seguidores[], int tamanho);
 
-char* variaveis();
+char* variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico, char *tokens_seguidores[], int tamanho);
 
 char* dc_p();
 
@@ -44,11 +44,11 @@ char* cmd();
 
 char* condicao();
 
-int fator();
+char* fator();
 
 char* expressao();
 
-int termo();
+char* termo();
 
 char* lista_arg();
 
