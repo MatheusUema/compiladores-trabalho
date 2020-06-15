@@ -1,4 +1,4 @@
-program p;
+program p; 
 const a = 2;
 var x: integer;
 begin
