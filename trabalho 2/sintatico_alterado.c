@@ -577,7 +577,7 @@ int condicao_final(char buffer, int automato)
 
     if (automato == 4)
     {
-        if (!confere_reservado(buffer))
+        if (!confere_reservado(buffer) || buffer == ';')
             return 1;
     }
     return 0;
@@ -1005,7 +1005,7 @@ char *variaveis(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *co
     if(strcmp(token, "comando_reservado_virgula") == 0)
     {
          *modo_panico = -1;
-        printf("',' lido\n");
+        printf("',' lido \n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
         // printf("token: %s \n", token);
@@ -1032,7 +1032,7 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
     printf("entrei em dc_p()\n");
     if (strcmp(token, "comando_reservado_procedure") != 0)
     {
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
         return token;
     }
     else // Presumi aqui que se um simbolo não é diferente de var, ele é igual
@@ -1041,7 +1041,7 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         printf("'procedure' lido \n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
 
     if (strcmp(token, "identificador") == 0)
@@ -1050,31 +1050,30 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         printf("'identificador' lido \n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: 'identificador' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: 'identificador' esperado\n", *numero_linha);
         char *token_esperados[3];
         token_esperados[0] = "comando_reservado_abre_parenteses";
         token_esperados[1] = "comando_reservado_procedure";
         token_esperados[2] = "comando_reservado_begin";
         token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
 
     //Tratamento de erros: caso não seja ; ou (
     if (strcmp(token, "comando_reservado_ponto_virgula") != 0 && strcmp(token, "comando_reservado_abre_parenteses") != 0)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: ';' ou '(' esperado\n", *numero_linha);
-        char *token_esperados[4];
-        token_esperados[0] = "comando_reservado_abre_parenteses";
-        token_esperados[1] = "comando_reservado_ponto_virgula";
-        token_esperados[2] = "comando_reservado_procedure";
-        token_esperados[3] = "comando_reservado_begin";
-        token = erro(token, token_esperados, 4, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: ';' ou '(' esperado\n", *numero_linha);
+        char *token_esperados[3];
+        token_esperados[0] = "comando_reservado_var";
+        token_esperados[1] = "comando_reservado_procedure";
+        token_esperados[2] = "comando_reservado_begin";
+        token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
     }
 
     token = parametros(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
@@ -1085,12 +1084,12 @@ char *dc_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *control
         printf("';' lido \n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: ';' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: ';' esperado\n", *numero_linha - 1);
         char *token_esperados[3];
         token_esperados[0] = "comando_reservado_var";
         token_esperados[1] = "comando_reservado_procedure";
@@ -1113,7 +1112,7 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
     if (strcmp(token, "comando_reservado_abre_parenteses") != 0)
     {
         printf("sai de parametros()\n");
-        printf("token: %s\n", token);
+        // printf("token: %s\n", token);
         return token;
     }
     else // Presumi aqui que se um simbolo não é diferente de var, ele é igual
@@ -1122,11 +1121,11 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         printf("'(' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
 
     token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
-    printf("token: %s \n", token);
+    // printf("token: %s \n", token);
 
     if (strcmp(token, "comando_reservado_dois_pontos") == 0)
     {
@@ -1134,18 +1133,18 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         printf("':' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: ':' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: ':' esperado\n", *numero_linha);
         char *token_esperados[3];
         token_esperados[0] = "comando_reservado_real";
         token_esperados[1] = "comando_reservado_integer";
         token_esperados[2] = "comando_reservado_ponto_virgula";
         token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     if ((strcmp(token, "comando_reservado_integer") == 0) || (strcmp(token, "comando_reservado_real") == 0))
     {
@@ -1156,17 +1155,17 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
             printf("'real' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: 'número' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: 'tipo de numero' esperado\n", *numero_linha);
         char *token_esperados[2];
         token_esperados[0] = "comando_reservado_ponto_virgula";
         token_esperados[1] = "comando_reservado_fecha_parenseteses";
         token = erro(token, token_esperados, 2, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
 
     while (strcmp(token, "comando_reservado_ponto_virgula") == 0)
@@ -1174,10 +1173,21 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         printf("';' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
-
-        token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
+        
+        if(strcmp(token, "identificador") == 0) token = variaveis(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_variaveis, 1);
+        else if (*modo_panico == -1)
+        {
+            *modo_panico = 1;
+            fprintf(arquivo_saida, "Erro sintático na linha %d: 'identificador' esperado\n", *numero_linha);
+            char *token_esperados[4];
+            token_esperados[0] = "comando_reservado_ponto_virgula";
+            token_esperados[1] = "comando_reservado_fecha_parenteses";
+            token_esperados[2] = "comando_reservado_var";
+            token_esperados[3] = "comando_reservado_begin";
+            token = erro(token, token_esperados, 4, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+            break;
+        }
 
         if (strcmp(token, "comando_reservado_dois_pontos") == 0)
         {
@@ -1190,7 +1200,7 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         else if (*modo_panico == -1)
         {
             *modo_panico = 1;
-            printf("Erro sintático na linha %d: ':' esperado\n", *numero_linha);
+            fprintf(arquivo_saida, "Erro sintático na linha %d: ':' esperado\n", *numero_linha);
             char *token_esperados[3];
             token_esperados[0] = "comando_reservado_real";
             token_esperados[1] = "comando_reservado_integer";
@@ -1204,18 +1214,17 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
             printf("'integer ou real' lido\n");
             free(token);
             token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-            printf("token: %s \n", token);
+            // printf("token: %s \n", token);
         }
         else if (*modo_panico == -1)
         {
             *modo_panico = 1;
-            printf("Erro sintático na linha %d: 'número' esperado\n", *numero_linha);
+            fprintf(arquivo_saida, "Erro sintático na linha %d: 'tipo de numero' esperado\n", *numero_linha);
             char *token_esperados[2];
             token_esperados[0] = "comando_reservado_ponto_virgula";
             token_esperados[1] = "comando_reservado_fecha_parenteses";
             token = erro(token, token_esperados, 2, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
             if(strcmp(token, "comando_reservado_fecha_parenteses") == 0) break; //caso tenha faltando 'real' ou 'integer', e colocou ')', tem que sair do loop
-            printf("token: %s \n", token);
         }
 
     }
@@ -1226,20 +1235,17 @@ char *parametros(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *c
         printf("')' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
-        printf("sai de parametros()\n");
-        return token;
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: ')' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: ')' esperado\n", *numero_linha);
         char *token_esperados[1];
         token_esperados[0] = "comando_reservado_ponto_virgula";
         token = erro(token, token_esperados, 1, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
-        return token;
     }
+    printf("sai de parametros()\n");
+    return token;
 }
 
 char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
@@ -1248,21 +1254,31 @@ char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *cont
 
     char *tokens_seguidores_dc_v[1];
     tokens_seguidores_dc_v[0] = "comando_reservado_begin";
+
+    char *tokens_inicio_cmd[7];
+    tokens_inicio_cmd[0] = "comando_reservado_read";
+    tokens_inicio_cmd[1] = "comando_reservado_write";
+    tokens_inicio_cmd[2] = "comando_reservado_while";
+    tokens_inicio_cmd[3] = "comando_reservado_if";
+    tokens_inicio_cmd[4] = "comando_reservado_begin";
+    tokens_inicio_cmd[5] = "comando_reservado_for";
+    tokens_inicio_cmd[6] = "identificador";
     
     token = dc_v(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, tokens_seguidores_dc_v, 1);
+    *numero_linha -=1;
     if (strcmp(token, "comando_reservado_begin") == 0)
     {
         *modo_panico = -1;
         printf("'begin' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
         
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: 'begin' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: 'begin' esperado\n", *numero_linha);
         char *token_esperados[8];
         token_esperados[0] = "comando_reservado_read";
         token_esperados[1] = "comando_reservado_write";
@@ -1274,29 +1290,48 @@ char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *cont
         token_esperados[7] = "comando_reservado_procedure";
 
         token = erro(token, token_esperados, 8, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
+    int ativa_comandos = 0;
+    for(int i = 0; i < 7; i++){
+        if(strcmp(token, tokens_inicio_cmd[i]) == 0)
+        {
+            ativa_comandos = 1;
+            token = comandos(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+            break;
+        }
+    }
+    if(ativa_comandos == 0)
+    {
+        *modo_panico = 1;
+        fprintf(arquivo_saida, "Erro sintático na linha %d: comando esperado\n", *numero_linha);
+        char *token_esperados[3];
+        token_esperados[0] = "comando_reservado_end";
+        token_esperados[1] = "comando_reservado_begin";
+        token_esperados[2] = "comando_reservado_procedure";
 
-    token = comandos(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
-
+        token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+        // printf("token: %s \n", token);
+    }
+    
     if (strcmp(token, "comando_reservado_end") == 0)
     {
         *modo_panico = -1;
         printf("'end' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: 'end' esperado\n", *numero_linha);
+        fprintf(arquivo_saida, "Erro sintático na linha %d: 'end' esperado\n", *numero_linha);
         char *token_esperados[3];
         token_esperados[0] = "comando_reservado_ponto_virgula";
         token_esperados[1] = "comando_reservado_procedure";
         token_esperados[2] = "comando_reservado_begin";
         token = erro(token, token_esperados, 3, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     if (strcmp(token, "comando_reservado_ponto_virgula") == 0)
     {
@@ -1304,17 +1339,18 @@ char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *cont
         printf("';' lido\n");
         free(token);
         token = analisador_lexico(arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
     else if (*modo_panico == -1)
     {
         *modo_panico = 1;
-        printf("Erro sintático na linha %d: ';' esperado\n", *numero_linha);
+        
+        fprintf(arquivo_saida, "Erro sintático na linha %d: ';' esperado\n", *numero_linha-1);
         char *token_esperados[2];
         token_esperados[0] = "comando_reservado_procedure";
         token_esperados[1] = "comando_reservado_begin";
         token = erro(token, token_esperados, 2, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+        // printf("token: %s \n", token);
     }
 
     printf("sai de corpo_p()\n");
@@ -1324,14 +1360,15 @@ char *corpo_p(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *cont
 char *comandos(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)
 {
     printf("entrei em comandos() \n");
-    printf("token: %s \n", token);
+    // printf("token: %s \n", token);
     
     // Para caso cmd não precise ser executado, visto que todo caminho de comandos é seguido por 'end'
-    if (strcmp(token, "comando_reservado_end") == 0 || strcmp(token, "erro") == 0)
+    if (strcmp(token, "comando_reservado_end") == 0)
     {
         printf("sai de comandos() \n");
         return token;
     }
+
     char* token_seguidor[1];
     token_seguidor[0] = "comando_reservado_ponto_virgula";
     token = cmd(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico, token_seguidor);
@@ -1359,10 +1396,36 @@ char *comandos(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *con
         token_esperados[6] = "identificador";
         token_esperados[7] = "comando_reservado_end";
         token = erro(token, token_esperados, 8, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
-        printf("token: %s \n", token);
+    }
+    
+    char *tokens_inicio_cmd[7];
+    tokens_inicio_cmd[0] = "comando_reservado_read";
+    tokens_inicio_cmd[1] = "comando_reservado_write";
+    tokens_inicio_cmd[2] = "comando_reservado_while";
+    tokens_inicio_cmd[3] = "comando_reservado_if";
+    tokens_inicio_cmd[4] = "comando_reservado_begin";
+    tokens_inicio_cmd[5] = "comando_reservado_for";
+    tokens_inicio_cmd[6] = "identificador";
+
+    for(int i = 0; i < 7; i ++)
+    {
+        if(strcmp(token, tokens_inicio_cmd[i]) == 0)  comandos(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
     }
 
-    comandos(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+    if (strcmp(token, "comando_reservado_end") == 0)
+    {
+        comandos(token, arquivo_entrada, arquivo_saida, controle_arq, numero_linha, modo_panico);
+    }
+    else if (*modo_panico == -1)
+    {
+        *modo_panico = 1;
+        printf("Erro sintático na linha %d: ';' esperado\n", *numero_linha);
+        char *token_esperados[2];
+        token_esperados[0] = "comando_reservado_ponto_virgula";
+        token_esperados[1] = "comando_reservado_end";
+        token = erro(token, token_esperados, 2, arquivo_entrada, arquivo_saida, controle_arq, numero_linha);
+    }
+    return token;
 }
 
 char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico, char* token_seguidor[])
@@ -1807,7 +1870,7 @@ char *cmd(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle
         printf("sai de cmd() \n");
         return token;
     }
-    return "erro";
+    return token;
 }
 
 char *condicao(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *controle_arq, int *numero_linha, int *modo_panico)

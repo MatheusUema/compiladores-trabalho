@@ -3,6 +3,7 @@ procedure a (x, y: real; a, b: integer);
 var c, d: real;
 begin
     x := x + 1;
+    := x + 1
 end;
 begin
 end.
