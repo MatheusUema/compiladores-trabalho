@@ -2,9 +2,8 @@ program p;
 procedure a (x, y: real; a, b: integer);
 var c, d: real;
 begin
-    write (a, b);
-    y := x + 1;
-    write (x, m);
+    if x > y
+        then write(x);
 end;
 begin
 end.
