@@ -795,6 +795,8 @@ int programa(char *token, FILE *arquivo_entrada, FILE *arquivo_saida, int *contr
         modo_panico = 1;
         fprintf(arquivo_saida, "Erro sintático na linha %d: 'ponto' esperado\n", *numero_linha);
     }
+
+    free(token);
     printf("fim da analise\n");
     return 1;
 
